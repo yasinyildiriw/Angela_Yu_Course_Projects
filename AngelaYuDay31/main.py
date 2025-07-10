@@ -1,4 +1,3 @@
-from sys import orig_argv
 from tkinter import *
 import pandas
 import random
