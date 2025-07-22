@@ -3,8 +3,9 @@ from datetime import datetime
 
 today = datetime.now()
 
-USERNAME = "yasinq"
-TOKEN = "kajshfkbaewkuahcn238w9asd"
+USERNAME = ""
+TOKEN = ""
+GRAPH_ID = ""
 
 pixela_endpoint = "https://pixe.la/v1/users"
 user_parameters = {
@@ -19,7 +20,7 @@ user_parameters = {
 graph_endpoint = f"{pixela_endpoint}/{USERNAME}/graphs"
 
 graph_config = {
-    "id" : "graph1",
+    "id" : GRAPH_ID,
     "name" : "Running Graph",
     "unit" : "Km",
     "type" : "float",
