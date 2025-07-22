@@ -39,11 +39,11 @@ quantity = {
     "quantity" : input("How many kilometers did you run today? "),
 }
 
-response = requests.post(url=f"{graph_endpoint}/graph1",json=quantity,headers=headers)
+response = requests.post(url=f"{graph_endpoint}/{GRAPH_ID}",json=quantity,headers=headers)
 print(response.text)
 
-# response = requests.put(url=f"{graph_endpoint}/graph1/{today.strftime("%Y%m%d")}",json=quantity,headers=headers)
+# response = requests.put(url=f"{graph_endpoint}/{GRAPH_ID}/{today.strftime("%Y%m%d")}",json=quantity,headers=headers)
 # print(response.text)
 
-# response = requests.delete(url=f"{graph_endpoint}/graph1/{today.strftime("%Y%m%d")}", headers=headers)
+# response = requests.delete(url=f"{graph_endpoint}/{GRAPH_ID}/{today.strftime("%Y%m%d")}", headers=headers)
 # print(response.text)
