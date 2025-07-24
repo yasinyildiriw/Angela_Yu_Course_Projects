@@ -6,15 +6,15 @@ GENDER = "male"
 WEIGHT = 79
 HEIGHT = 178
 
-APP_ID = "471c58e4"
-X_API_KEY = "4098abe874ec34f92b1deb0d175976c9"
+APP_ID = ""
+X_API_KEY = ""
 
-USERNAME = "yasin"
-PASSWORD = "pqzjanljfnlasnfjsnj12"
-TOKEN = "eWFzaW46cHF6amFubGpmbmxhc25manNuajEy"
+USERNAME = ""
+PASSWORD = ""
+TOKEN = ""
 
 endpoint = "https://trackapi.nutritionix.com"
-sheet_endpoint = "https://api.sheety.co/3940a86f6267132b315c846d8052c3e5/myWorkouts/workouts"
+sheet_endpoint = "https://api.sheety.co"
 
 bearer_headers = {
     "Authorization": f"Bearer {TOKEN}"
