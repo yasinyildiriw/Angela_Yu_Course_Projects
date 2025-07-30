@@ -1,74 +1,39 @@
-import random
-logo = r"""
-.------.            _     _            _    _            _    
-|A_  _ |.          | |   | |          | |  (_)          | |   
-|( \/ ).-----.     | |__ | | __ _  ___| | ___  __ _  ___| | __
-| \  /|K /\  |     | '_ \| |/ _` |/ __| |/ / |/ _` |/ __| |/ /
-|  \/ | /  \ |     | |_) | | (_| | (__|   <| | (_| | (__|   < 
-`-----| \  / |     |_.__/|_|\__,_|\___|_|\_\ |\__,_|\___|_|\_\\
-      |  \/ K|                            _/ |                
-      `------'                           |__/           
-"""
+import time
+from datetime import datetime, timedelta
+from data_manager import DataManager
+from flight_search import FlightSearch
+from flight_data import FlightData
+import notification_manager
 
-def deal_card():
-    cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
-    card = random.choice(cards)
-    return card
 
-def calculate_score(cards):
-    if sum(cards) == 21 and len(cards) == 2:
-        return 0
-    if 11 in cards and sum(cards) > 21:
-        cards.remove(11)
-        cards.append(1)
-    return sum(cards)
+flight_search = FlightSearch()
+data_manager = DataManager()
 
-def compare(userscore, computerscore):
-    if userscore == computerscore:
-        return "Draw"
-    elif computerscore == 0:
-        return "Lose, oppenent have Blackjack "
-    elif userscore == 0:
-        return "Win with a Blackjack "
-    elif userscore > 21:
-        return "You went over. You lose "
-    elif computerscore > 21:
-        return "Opppenent went over. You win "
-    elif userscore > computerscore:
-        return "You win"
-    else:
-        return "You lose"
-def playgame():
-    print(logo)
-    user_cards = []
-    computer_cards = []
-    computer_score = -1
-    user_score = -1
-    is_game_over = False
-    while not is_game_over:
-        for i in range(2):
-            user_cards.append(deal_card())
-            computer_cards.append(deal_card())
-        user_score = calculate_score(user_cards)
-        computer_score = calculate_score(computer_cards)
+sheet_data = data_manager.get_destination()
 
-        print(f"Your cards: {user_cards}, current score: {user_score}")
-        print(f"Computer's first card: {computer_cards[0]}")
+FROM_CITY_IATA = "IST"
 
-        if user_score == 0 or computer_score == 0 or user_score > 21:
-            is_game_over = True
-        else:
-            user_should_deal = input("Type 'y' to get another card, type 'n' to pass: ").lower()
-            if user_should_deal == "y":
-                user_cards.append(deal_card())
-            else:
-                is_game_over = True
-    while computer_score != 0 and computer_score < 17:
-        computer_cards.append(deal_card())
-        computer_score = calculate_score(computer_cards)
-    print(f"Your final hand: {user_cards}, final score: {user_score}")
-    print(f"Computer's final hand: {computer_cards}, final score: {computer_score}")
-    print(compare(user_score,computer_score))
-while input("Do you want to play a game Blackjack? Type 'y' or 'n'") == "y":
-    print("\n"*25)
-    playgame()
+for row in sheet_data:
+    if row["iataCode"] == "":
+        row["iataCode"] = FlightSearch.get_destination_code(row["city"])
+        time.sleep(2)
+
+print(f"sheet_data:\n {sheet_data}")
+
+data_manager.destination_data = sheet_data
+data_manager.update_destination()
+
+tomorrow = datetime.now() + timedelta(days=1)
+six_month_from_today = datetime.now() + timedelta(days=(6 * 30))
+
+for destination in sheet_data:
+    print(f"Getting flights for {destination['city']}...")
+    flights = flight_search.check_flights(FROM_CITY_IATA,destination["iataCode"],from_time=tomorrow,to_time=six_month_from_today)
+    cheapest_flight = FlightData.find_cheapest_flight(flights)
+    if cheapest_flight.price != "N/A" and cheapest_flight.price < destination["lowestPrice"]:
+        print(f"Lower price flight found to {destination['city']}!")
+
+        notification_manager.send_whatsapp(
+            message_body=f"Low price alert! Only £{cheapest_flight.price} to fly "
+                         f"from {cheapest_flight.origin_airport} to {cheapest_flight.destination_airport}, "
+                         f"on {cheapest_flight.out_date} until {cheapest_flight.return_date}.")
