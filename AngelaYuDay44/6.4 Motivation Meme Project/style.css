@@ -1,0 +1,20 @@
+html{
+    background-color: black;
+}
+#image{
+    border:  10px solid white;
+    margin-left: 25%;
+    margin-top: 50px;
+}
+#moment{
+    font: "Times New Roman" , cursive;
+    color: white;
+    size: 20px;
+    text-align: center;
+}
+#avocado{
+    font: "Times New Roman" , cursive;
+    color: white;
+    text-align: center;
+    size: 10px;
+}
