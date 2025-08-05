@@ -3,10 +3,10 @@ from bs4 import BeautifulSoup
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
-CLIENT_ID = "0b16f20c18a943d580ac7efe634f18a9"
-CLIENT_SECRET = "6f5f0630ee4f450882541588602982f7"
+CLIENT_ID = ""
+CLIENT_SECRET = ""
 REDIRECT_URL = "http://127.0.0.1:8888/callback"
-USER = "23r88di6zipjqbk3x2vptu4n8"
+USER = ""
 
 url = "https://www.billboard.com/charts/hot-100/"
 header = {
@@ -71,3 +71,4 @@ print(f"🎉 Created playlist: {playlist_name} (ID: {playlist_id})")
 
 sp.playlist_add_items(playlist_id=playlist_id, items=track_uris)
 print(f"✅ Added {len(track_uris)} songs to playlist!")
+
